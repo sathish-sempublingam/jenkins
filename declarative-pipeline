@@ -1,0 +1,153 @@
+Declarative script(pipeline)
+
+
+******************HTML********************
+
+pipeline{
+    agent any 
+    stages{
+        stage("clone"){
+            steps{
+                git branch: 'main', url: 'https://github.com/sathish-sempublingam/sample-html-app.git'
+                sh "ls"
+            }
+        }
+        stage("build"){
+            steps{
+            sh "docker build -t html-app ."
+            }
+        }
+        stage("compile"){
+            steps{
+            sh "docker tag html-app sathishsembulingam/html-app"
+            sh "docker login -u sathishsembulingam -p ssathishmrp105"
+            sh "docker push sathishsembulingam/html-app"
+            }
+        }
+        stage("container"){
+            steps{
+                sh "docker run -d --name html-app -p 81:80 sathishsembulingam/html-app"
+            }
+        }
+    }
+}
+
+
+
+*****************java*******************
+
+
+
+pipeline{
+    agent any
+    stages{
+        stage("clone"){
+            steps{
+                git branch: 'main', url: 'https://github.com/sathish-sempublingam/sample-java-spring-app.git'
+                sh "ls"
+            }
+        }
+        stage("compile"){
+            steps{
+            sh "mvn clean install"
+            }
+        }
+        stage("build"){
+            steps{
+                sh "docker build -t java-app ."
+            }
+        }
+        stage("docker hub"){
+            steps{
+                sh "docker tag java-app sathishsembulingam/java-app"
+                sh "docker login -u sathishsembulingam -p ssathishmrp105"
+                sh "docker push sathishsembulingam/html-app"
+            }
+        }
+        stage("old run remove"){
+            steps{
+                sh " docker rm -f java-app"
+            }
+        }
+        stage("container"){
+            steps{
+                sh "docker run -d --name java-app -p 8082:8080 sathishsembulingam/java-app "
+            }
+        }
+    }
+}
+
+
+********************node**********************
+
+pipeline{
+    agent any 
+    stages{
+        stage("clone"){
+            steps{
+                git branch: 'main', url: 'https://github.com/sathish-sempublingam/sample-node-app.git'
+                sh "ls"
+            }
+        }
+        stage("build"){
+            steps{
+            sh "docker build -t node-app ."
+            }
+        }
+        stage("compile"){
+            steps{
+            sh "docker tag node-app sathishsembulingam/node-app"
+            sh "docker login -u sathishsembulingam -p ssathishmrp105"
+            sh "docker push sathishsembulingam/node-app"
+            }
+        }
+        stage("remove"){
+            steps{
+                sh "docker rm -f node-app"
+            }
+        }
+        stage("container"){
+            steps{
+                sh "docker run -d --name node-app -p 9001:9000 sathishsembulingam/node-app"
+            }
+        }
+    }
+}
+
+
+*************python*****************
+ 
+
+pipeline{
+    agent any 
+    stages{
+        stage("clone"){
+            steps{
+                git branch: 'main', url: 'https://github.com/sathish-sempublingam/sample-python-app.git'
+                sh "ls"
+            }
+        }
+        stage("build"){
+            steps{
+            sh "docker build -t python-app ."
+            }
+        }
+        stage("compile"){
+            steps{
+            sh "docker tag python-app sathishsembulingam/python-app"
+            sh "docker login -u sathishsembulingam -p ssathishmrp105"
+            sh "docker push sathishsembulingam/python-app"
+            }
+        }
+        stage("remove"){
+            steps{
+                sh "docker rm -f python-app"
+            }
+        }
+        stage("container"){
+            steps{
+                sh "docker run -d --name python-app -p 8008:8000 sathishsembulingam/python-app"
+            }
+        }
+    }
+}
