@@ -22,15 +22,26 @@ node{
 *********html***************
 
 node{
-    stage("clone ur"){
+    stage('clone'){
         git branch: 'main', url: 'https://github.com/sathish-sempublingam/sample-html-app.git'
-        sh "ls"
+        sh 'ls'
     }
-    stage("build image"){
-        sh "docker build -t html-app ."
+    stage('compile'){
+        sh 'docker build -t html-app .'
     }
-    stage("docker container"){
-        sh "docker run -d --name html -p 81:80 html-app"
+    stage('docker hub'){
+        sh 'docker tag html-app sathishsembulingam/html-app'
+        sh 'docker login -u sathishsembulingam -p ssathishmrp105'
+        sh 'docker push sathishsembulingam/html-app'
+    }
+    stage('docker remove old'){
+        sh 'docker rm -f html-app'
+    }
+    stage('docker container'){
+        sh 'docker run -d --name html-app -p 83:80 sathishsembulingam/html-app'
+    }
+    stage('work space'){
+        cleanWs()
     }
 }
 
