@@ -2,23 +2,25 @@
 
 node{
     stage("clone"){
-        git branch: 'main', url: 'https://github.com/KishoreN27/sample-node-app.git'
+        git branch: 'main', url: 'https://github.com/ArunMagi/sample-java-spring-app.git'
         sh "ls"
     }
-    stage("docker image"){
-        sh "docker build -t kishoren27/node-app ."
+    stage("compile"){
+        sh "mvn clean install"
     }
-
-    stage("docker hub"){
-        sh "docker  login -u kishoren27 -p KishoreN@2723"
-        sh "docker push kishoren27/node-app"
+    stage("build"){
+        sh "docker build -t sathishsembulingam/java-app ."
     }
-    stage("docker container"){
-        sh "docker  run -d -p 9001:9000 --name node-app kishoren27/node-app"
+    stage("hub"){
+        sh "docker login -u sathishsembulingam -p ssathishmrp105"
+        sh "docker push sathishsembulingam/java-app"
     }
-
+    stage("container"){
+        sh "docker stop java-app || ls"
+        sh "docker rm -f java-app || ls"
+        sh "docker run -d --name java-app -p 8083:8080 sathishsembulingam/java-app"
+    }
 }
-
 *********html***************
 
 node{
